@@ -31,7 +31,7 @@ foreach ($recipe as $recipe) {
 
 //REQUETE POUR SELECTIONNER LES ELEMENTS
 
-$recipeStatement = $mysqlClient->prepare('SELECT recipe_name, preparation_time, category_name 
+$recipeStatement = $mysqlClient->prepare('SELECT id_recipe, recipe_name, preparation_time, category_name 
 FROM recipe
 INNER JOIN category
 ON recipe.id_category = category.id_category');
@@ -42,6 +42,7 @@ $recipe = $recipeStatement->fetchAll();
 
 //AFFICHER LES RECETTES DANS UN TABLEAU HTML AVEC 3 COLONNES
 ?>
+
 <table>  
 	<tr>
 		<th>Recipe Name</th>
@@ -51,14 +52,15 @@ $recipe = $recipeStatement->fetchAll();
 	
 
 <?php foreach ($recipe as $recipe): ?>
- 
+	
 	<tr>
-		<td><?php echo $recipe['recipe_name']; ?></td>
+		<td><a href = "details_recipe.php?id=<?= $recipe["id_recipe"] ?>" target=_blank><?php echo $recipe['recipe_name'];?></a></td>
 		<td><?php echo $recipe['preparation_time']; ?></td>
 		<td><?php echo $recipe['category_name']; ?></td>
 	</tr>
 	
-	<?php endforeach ?>
+	<?php endforeach 
+?>
 </table>
 
 
