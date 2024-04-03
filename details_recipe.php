@@ -1,6 +1,5 @@
 <?php
 
-$id = $_GET["id"];
 
 //CONNEXION
 try
@@ -20,6 +19,8 @@ catch (Exception $e)
 
 //REQUETE POUR RECUPERER LES ELEMENTS
 
+//$id = $_GET["id"];
+
 //METHODE PREPARE
 $recipeStatement = $mysqlClient->prepare('SELECT id_recipe, instructions, recipe_name, preparation_time, category_name 
 FROM recipe
@@ -27,11 +28,12 @@ INNER JOIN category
 ON recipe.id_category = category.id_category
 WHERE id_recipe = :id'); // ":id" correspond ici à id-recipe/ "id est repris dans la méthode EXECUTE sans les ":"
 
-
 //METHODE EXECUTE
-$recipeStatement->execute([
-    "id" => $id 
-]);
+$id_recipe=1;
+
+$recipeStatement->execute(array(
+    ':id' => $id_recipe
+));
 
 $recipe = $recipeStatement->fetch();/*car on recherche un élément (fecthAll pour plusieurs éléments)*/
 
@@ -42,18 +44,44 @@ INNER JOIN recipe_ingredients
 ON ingredient.id_ingredient = recipe_ingredients.id_ingredient
 WHERE id_recipe = :id');
 
-$recipeStatement->execute([
-    "id" => $id 
-]);
 
-$recipe = $recipeStatement->fetchAll();
+$recipeStatement->execute(array(
+    ':id' => $id_recipe
+));
 
-foreach ($ingredient as $ingredient){
-    ?>
-		<p><?php echo $ingredient['id_ingredient']; ?></p>
-		<p><?php echo $ingredient['id_recipe']; ?></p>
-        <p><?php echo $ingredient['quantity']; ?></p>
+$ingredient = $recipeStatement->fetchAll();
 
-	<?php	
-}
 ?>
+
+<table>  
+	<tr>
+		<th>Quantity</th>
+		<th>Ingredient Name</th>
+			</tr>
+
+	<?php foreach ($ingredient as $ingredient) : ?>
+    <tr>
+	<td><?php echo $ingredient['quantity'];?></td>
+    <td><?php echo $ingredient['ingredient_name'];?></td>
+	<tr>
+	<?php endforeach 
+     ?>
+
+</table>
+
+<style> /*MISE EN FORME DU TABLEAU CSS*/
+	table {
+		border:3px solid black;
+	}
+
+	th, td{
+		padding:20px;	
+	}
+</style>
+
+  
+
+
+  
+
+
