@@ -29,14 +29,16 @@ foreach ($recipe as $recipe) {
 */
 
 
-//REQUETE POUR SELECTIONNER LES ELEMENTS
+//REQUETE POUR SELECTIONNER LES ELEMENTS(Recipe Name, Preparation Time, Category Name)
 
+//METHODE PREPARE
 $recipeStatement = $mysqlClient->prepare('SELECT id_recipe, recipe_name, preparation_time, category_name 
 FROM recipe
 INNER JOIN category
 ON recipe.id_category = category.id_category');
 
 
+//METHODE EXECUTE
 $recipeStatement->execute();
 $recipe = $recipeStatement->fetchAll();
 

@@ -17,9 +17,9 @@ catch (Exception $e)
     die('Erreur : ' . $e->getMessage());
 }
 
-//REQUETE POUR RECUPERER LES ELEMENTS
+//1ER EXO: REQUETE POUR RECUPERER LES ELEMENTS
 
-//$id = $_GET["id"];
+$id_recipe = $_GET["id"];
 
 //METHODE PREPARE
 $recipeStatement = $mysqlClient->prepare('SELECT id_recipe, instructions, recipe_name, preparation_time, category_name 
@@ -28,8 +28,6 @@ INNER JOIN category
 ON recipe.id_category = category.id_category
 WHERE id_recipe = :id'); // ":id" correspond ici à id-recipe/ "id est repris dans la méthode EXECUTE sans les ":"
 
-//METHODE EXECUTE
-$id_recipe=1;
 
 $recipeStatement->execute(array(
     ':id' => $id_recipe
@@ -37,20 +35,25 @@ $recipeStatement->execute(array(
 
 $recipe = $recipeStatement->fetch();/*car on recherche un élément (fecthAll pour plusieurs éléments)*/
 
-echo $recipe["recipe_name"];
+echo $recipe["recipe_name"]; //AFFICHAGE DU NOM DE LA RECETTE SELECTIONNEE
 
+
+//2EME EXO: REQUETE POUR RECUPERER LES ELEMENTS (Quantity, Ingredient Name)
+
+//METHODE PREPARE
 $recipeStatement = $mysqlClient->prepare('SELECT * FROM ingredient
 INNER JOIN recipe_ingredients
 ON ingredient.id_ingredient = recipe_ingredients.id_ingredient
 WHERE id_recipe = :id');
 
-
+//METHODE EXECUTE
 $recipeStatement->execute(array(
     ':id' => $id_recipe
 ));
 
 $ingredient = $recipeStatement->fetchAll();
 
+//AFFICHAGE DU TABLEAU AAVEC LES RESULTATS
 ?>
 
 <table>  
